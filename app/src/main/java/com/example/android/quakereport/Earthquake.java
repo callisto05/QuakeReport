@@ -5,9 +5,9 @@ import java.util.ArrayList;
 public class Earthquake {
     private double mMagnitude;
     private String mLocation;
-    private  String mDate;
+    private  Long mDate;
 
-    public Earthquake(double mMagnitude, String mLocation, String mDate) {
+    public Earthquake(double mMagnitude, String mLocation, Long mDate) {
         this.mMagnitude = mMagnitude;
         this.mLocation = mLocation;
         this.mDate = mDate;
@@ -21,7 +21,7 @@ public class Earthquake {
         return mLocation;
     }
 
-    public String getDate() {
+    public Long getDate() {
         return mDate;
     }
 }
