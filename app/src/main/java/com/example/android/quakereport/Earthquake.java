@@ -1,18 +1,18 @@
 package com.example.android.quakereport;
 
-import java.util.ArrayList;
-
 public class Earthquake {
     private double mMagnitude;
     private String mLocation;
     private  Long mDate;
-    private String mUrl;
+    private  String mUrl;
 
-    public Earthquake(double mMagnitude, String mLocation, Long mDate,String url) {
+
+    public Earthquake(double mMagnitude, String mLocation, Long mDate, String mUrl) {
         this.mMagnitude = mMagnitude;
         this.mLocation = mLocation;
         this.mDate = mDate;
-        this.mUrl = url;
+        this.mUrl =mUrl;
+
     }
 
     public double getMagnitude() {

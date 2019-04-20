@@ -1,26 +1,22 @@
 package com.example.android.quakereport;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Switch;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.concurrent.TimeoutException;
 
 public class EarthquakeAdapter extends ArrayAdapter {
+    public static final String LOG_TAG = EarthquakeActivity.class.getName();
     public EarthquakeAdapter(Context context, ArrayList<Earthquake> earthquakes) {
         super(context, 0, earthquakes);
     }
@@ -55,6 +51,7 @@ public class EarthquakeAdapter extends ArrayAdapter {
         Date dateObj = new Date(currentEarthquake.getDate());
 
         String formattedDate = formatDate(dateObj);
+        Log.i(LOG_TAG, "Date is : " +formattedDate);
         String formattedTime = formatTime(dateObj);
 
         date.setText(formattedDate);
@@ -93,7 +90,7 @@ public class EarthquakeAdapter extends ArrayAdapter {
 
 
     private String formatDate(Date date) {
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM DD, yyy");
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM, d, yyy");
         return dateFormatter.format(date);
     }
 
