@@ -3,7 +3,6 @@ package com.example.android.quakereport;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +50,6 @@ public class EarthquakeAdapter extends ArrayAdapter {
         Date dateObj = new Date(currentEarthquake.getDate());
 
         String formattedDate = formatDate(dateObj);
-        Log.i(LOG_TAG, "Date is : " +formattedDate);
         String formattedTime = formatTime(dateObj);
 
         date.setText(formattedDate);
