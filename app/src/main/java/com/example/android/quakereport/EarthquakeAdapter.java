@@ -16,6 +16,8 @@ import java.util.Date;
 
 public class EarthquakeAdapter extends ArrayAdapter {
     public static final String LOG_TAG = EarthquakeActivity.class.getName();
+
+
     public EarthquakeAdapter(Context context, ArrayList<Earthquake> earthquakes) {
         super(context, 0, earthquakes);
     }

@@ -17,16 +17,20 @@ package com.example.android.quakereport;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -41,15 +45,12 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
     public static final String LOG_TAG = EarthquakeActivity.class.getName();
 
     private static final String USGS_REQUEST_URL =
-            "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time&minmag=6&limit=10";
+            "https://earthquake.usgs.gov/fdsnws/event/1/query";
+
     private EarthquakeAdapter mAdapter;
 //    Textview that is displayed when the listview is empty
     private TextView emptyText;
     ProgressBar progressBar;
-
-    public static String getU(){
-        return USGS_REQUEST_URL;
-    }
 
 
     @Override
@@ -85,7 +86,7 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
 
         mAdapter = new EarthquakeAdapter(EarthquakeActivity.this, new ArrayList<Earthquake>());
         // Find a reference to the {@link ListView} in the layout
-        ListView earthquakeListView = (ListView) findViewById(R.id.list);
+        ListView earthquakeListView = findViewById(R.id.list);
         earthquakeListView.setAdapter(mAdapter);
 
 //      Setting EmptyView
@@ -107,13 +108,41 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
 
-//      Create object of the loader and return the List of earthquakes
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            startActivity(settingsIntent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    //      Create object of the loader and return the List of earthquakes
     @NonNull
     @Override
     public Loader<List<Earthquake>> onCreateLoader(int i, @Nullable Bundle bundle) {
-        Log.v("LOG_TAG", "onCreateLoader called______");
-        return new EarthquakeLoader(EarthquakeActivity.this);
+//        Log.v("LOG_TAG", "onCreateLoader called______");
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String minMagnitude = sharedPrefs.getString(
+                getString(R.string.settings_min_magnitude_key),
+                getString(R.string.settings_min_magnitude_default));
+        Uri baseUri = Uri.parse(USGS_REQUEST_URL);
+        Uri.Builder uriBuilder = baseUri.buildUpon();
+
+        uriBuilder.appendQueryParameter("format", "geojson");
+        uriBuilder.appendQueryParameter("limit", "10");
+        uriBuilder.appendQueryParameter("minmag", minMagnitude);
+        uriBuilder.appendQueryParameter("orderby", "time");
+
+        return new EarthquakeLoader(EarthquakeActivity.this, uriBuilder.toString());
     }
 
 //    Set the loader data to UI adapter
@@ -122,9 +151,9 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
         progressBar = findViewById(R.id.progress);
         progressBar.setVisibility(View.GONE);
         mAdapter.clear();
-        Log.v("LOG_TAG", "onLoadFinished called_______");
+//        Log.v("LOG_TAG", "onLoadFinished called_______");
         if(earthquakes != null && !earthquakes.isEmpty()) {
-            //mAdapter.addAll(earthquakes);
+            mAdapter.addAll(earthquakes);
 
         }
 //      Setting the text in emptyview if the listview is null
@@ -134,7 +163,7 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
 //    Clear the Loader Data
     @Override
     public void onLoaderReset(@NonNull Loader<List<Earthquake>> loader) {
-        Log.v("LOG_TAG", "onLoaderReset called_______");
+//        Log.v("LOG_TAG", "onLoaderReset called_______");
         mAdapter.addAll(new ArrayList<Earthquake>());
     }
 

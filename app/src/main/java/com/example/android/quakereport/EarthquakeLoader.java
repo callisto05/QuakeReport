@@ -9,8 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EarthquakeLoader extends AsyncTaskLoader<List<Earthquake>> {
-    public EarthquakeLoader(@NonNull Context context) {
+
+    private String mUrl;
+
+    public EarthquakeLoader(@NonNull Context context, String url) {
         super(context);
+        mUrl = url;
     }
 
     @Override
@@ -22,8 +26,11 @@ public class EarthquakeLoader extends AsyncTaskLoader<List<Earthquake>> {
     @Nullable
     @Override
     public List<Earthquake> loadInBackground() {
+        if (mUrl == null) {
+            return null;
+        }
         List<Earthquake> earthquakesListLoader = new ArrayList<>();
-        earthquakesListLoader = QueryUtils.fetchEarthquakeData(EarthquakeActivity.getU());
+        earthquakesListLoader = QueryUtils.fetchEarthquakeData(mUrl);
         return earthquakesListLoader;
     }
 }
